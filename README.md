@@ -25,7 +25,7 @@ To assemble OpenScanTable, you will need some additional hardware:
 - 3 NEMA 17 stepper motors
 - Distance sensor for automatic adjustment
 
-For a complete list of parts and specifications, please refer to the (BOM.md)[./BOM.md] (Bill of Materials) in this repository.
+For a complete list of parts and specifications, please refer to the [BOM.md](./BOM.md)(Bill of Materials) in this repository.
 
 ## Use Cases
 
