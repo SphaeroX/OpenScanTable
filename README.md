@@ -18,6 +18,15 @@ Welcome to the OpenScanTable project – a modular platform for automated 3D sca
 - **Automatic Distance Control:** A sensor automatically adjusts the scanner's distance to the object.
 - **Versatility:** Suitable for single capture scans with RevoScan or photogrammetry projects with automated image captures.
 
+## Additional Hardware
+
+To assemble OpenScanTable, you will need some additional hardware:
+
+- 3 NEMA 17 stepper motors
+- Distance sensor for automatic adjustment
+
+For a complete list of parts and specifications, please refer to the BOM.md (Bill of Materials) in this repository.
+
 ## Use Cases
 
 - **3D Scanning:** Perfect for detailed 3D models of objects, supported by precise control over capture parameters.
@@ -31,6 +40,7 @@ Welcome to the OpenScanTable project – a modular platform for automated 3D sca
 - MKS Tinybee board with ESP32
 - Compatible recording devices (3D scanner, camera, etc.)
 - PlatformIO with Arduino Library
+- Required hardware as listed in BOM.md
 
 ### Installation
 
@@ -39,6 +49,12 @@ Welcome to the OpenScanTable project – a modular platform for automated 3D sca
 3. Upload the code to your MKS Tinybee board.
 4. Connect your recording device to the mount.
 5. Launch the web interface to control the scanning routines.
+
+## Preview
+
+![OpenScanTable in action](path-to-gif)
+
+This GIF showcases the OpenScanTable device in operation, demonstrating its versatility and ease of use.
 
 ## Contributing
 
