@@ -43,6 +43,12 @@ void handleSaveSettings()
     server.send(200, "text/plain", "Starting revo scan");
 }
 
+void handleTest()
+{
+    commandState = 999;
+    server.send(200, "text/plain", "Test");
+}
+
 void setupWebServer()
 {
     if (!SPIFFS.begin(true))
@@ -64,6 +70,7 @@ void setupWebServer()
     server.on("/", handleRoot);
     server.on("/startRevoscan", handleStartRevoscan);
     server.on("/saveSettings", handleSaveSettings);
+    server.on("/test", handleTest);
 
     // Start server
     server.begin();

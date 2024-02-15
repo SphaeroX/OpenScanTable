@@ -4,11 +4,24 @@
 
 #include <EEPROM.h>
 
-void initEEPROM(size_t size)
+#define MAX_SETTINGS 10 // Maximale Anzahl der Einstellungen
+
+struct Setting
+{
+    int address;
+    String value;
+} settings[MAX_SETTINGS] = {
+    // Beispiel-Einstellungen
+    {0, "Einstellung1"},
+    {50, "Einstellung2"} // Die Startadressen müssen manuell angepasst werden
+};
+
+void setupEEPROM(size_t size)
 {
     if (!EEPROM.begin(size))
     {
         Serial.println("Failed to initialise EEPROM");
+        return;
     }
 }
 
@@ -22,32 +35,48 @@ void saveString(int address, String data)
     EEPROM.commit();
 }
 
+String loadString(int address)
+{
+    String result;
+    char ch;
+    do
+    {
+        ch = EEPROM.read(address++);
+        if (ch)
+            result += ch;
+    } while (ch != '\0');
+    return result;
+}
+
 void saveSettings()
 {
-    return;
+    int address = 0;
+    for (int i = 0; i < MAX_SETTINGS; i++)
+    {
+        if (settings[i].value.length() == 0)
+            break; // Keine weiteren Einstellungen
+        saveString(address, settings[i].value);
+        address += settings[i].value.length() + 1; // +1 für Null-Terminator
+    }
 }
 
 void loadSettings()
 {
-    return;
-}
-
-String loadString(int address, int length)
-{
-    char data[length + 1]; // +1 für Null-Terminator
-    for (int i = 0; i < length; i++)
+    int address = 0;
+    for (int i = 0; i < MAX_SETTINGS; i++)
     {
-        data[i] = EEPROM.read(address + i);
+        settings[i].value = loadString(address);
+        if (settings[i].value.length() == 0)
+            break;                                 // Keine weiteren Einstellungen
+        address += settings[i].value.length() + 1; // +1 für Null-Terminator
     }
-    data[length] = '\0'; // Stelle sicher, dass die Zeichenkette korrekt terminiert ist
-    return String(data);
 }
 
 void clearEEPROM()
 {
     for (int i = 0; i < EEPROM.length(); i++)
     {
-        EEPROM.write(i, 0xFF); // EEPROM mit 0xFF löschen, was dem gelöschten Zustand entspricht
+        EEPROM.write(i, 0xFF); // EEPROM mit 0xFF löschen
     }
     EEPROM.commit();
 }

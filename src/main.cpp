@@ -18,6 +18,7 @@ void setup()
   setupUltrasonic();
   setupBluetooth();
   setupWebServer();
+  setupEEPROM(512);
   Serial.println("setup");
 }
 
@@ -38,27 +39,31 @@ void loop()
     performRevoScan(20, 17, 10, 3, 100, 1000);
     commandState = 0;
     break;
+  case 999:
+    testEEPROM();
+    commandState = 0;
+    break;
   }
-  // togglePin();
-  // moveXAxis(500, HIGH);
-  // moveYAxis(500, HIGH);
-  // sendKeystroke();
-  // loopWebServer();
-  // Serial.println("MOVE");
-  // moveAxisX(1000, HIGH);
-  // delay(1000);
+}
 
-  // setPin(17, HIGH);
-  // delay(500);
-  // setPin(18, HIGH);
-  // delay(500);
-  // setPin(19, HIGH);
-  // delay(500);
-  //
-  // setPin(19, LOW);
-  // delay(500);
-  // setPin(18, LOW);
-  // delay(500);
-  // setPin(17, LOW);
-  // delay(500);
+void testEEPROM()
+{
+  settings[0].value = "WiFi SSID"; // Beispielwerte
+  settings[1].value = "SehrGeheimesPasswort";
+
+  saveSettings(); // Speichert die Einstellungen im EEPROM
+
+  delay(1000); // Kurze Pause, um das Schreiben zu ermöglichen
+
+  // Beispiel: Laden von Einstellungen aus dem EEPROM
+  Serial.println("Laden von Einstellungen aus dem EEPROM...");
+  loadSettings(); // Lädt die Einstellungen aus dem EEPROM
+
+  // Ausgabe der geladenen Einstellungen auf die serielle Konsole
+  for (int i = 0; i < MAX_SETTINGS; i++)
+  {
+    if (settings[i].value.length() == 0)
+      break; // Ende der Einstellungen erreicht
+    Serial.println("Geladene Einstellung: " + settings[i].value);
+  }
 }

@@ -7,46 +7,55 @@ void setupMotors()
     setPin(STEP_PIN_X, LOW);
     setPin(STEP_PIN_Y, LOW);
     setPin(STEP_PIN_Z, LOW);
+
+    moveAxisX(10, HIGH, 1500);
+    moveAxisX(10, LOW, 1500);
+
+    moveAxisY(10, HIGH, 1500);
+    moveAxisY(10, LOW, 1500);
+
+    moveAxisZ(10, HIGH, 1500);
+    moveAxisZ(10, LOW, 1500);
 }
 
-void moveAxisX(int steps, bool direction)
+void moveAxisX(int steps, bool direction, int customDelay = STEP_DELAY_X)
 {
     setPin(EN_PIN_X, LOW);
     setPin(DIR_PIN_X, direction);
     for (int i = 0; i < steps; i++)
     {
         setPin(STEP_PIN_X, HIGH);
-        delayMicroseconds(STEP_DELAY_X);
+        delayMicroseconds(customDelay);
         setPin(STEP_PIN_X, LOW);
-        delayMicroseconds(STEP_DELAY_X);
+        delayMicroseconds(customDelay);
     }
     setPin(EN_PIN_X, HIGH);
 }
 
-void moveAxisY(int steps, bool direction)
+void moveAxisY(int steps, bool direction, int customDelay = STEP_DELAY_Y)
 {
     setPin(EN_PIN_Y, LOW);
     setPin(DIR_PIN_Y, direction);
     for (int i = 0; i < steps; i++)
     {
         setPin(STEP_PIN_Y, HIGH);
-        delayMicroseconds(STEP_DELAY_Y);
+        delayMicroseconds(customDelay);
         setPin(STEP_PIN_Y, LOW);
-        delayMicroseconds(STEP_DELAY_Y);
+        delayMicroseconds(customDelay);
     }
     setPin(EN_PIN_Y, HIGH);
 }
 
-void moveAxisZ(int steps, bool direction)
+void moveAxisZ(int steps, bool direction, int customDelay = STEP_DELAY_Z)
 {
     setPin(EN_PIN_Z, LOW);
     setPin(DIR_PIN_Z, direction);
     for (int i = 0; i < steps; i++)
     {
         setPin(STEP_PIN_Z, HIGH);
-        delayMicroseconds(STEP_DELAY_Z);
+        delayMicroseconds(customDelay);
         setPin(STEP_PIN_Z, LOW);
-        delayMicroseconds(STEP_DELAY_Z);
+        delayMicroseconds(customDelay);
     }
     setPin(EN_PIN_Z, HIGH);
 }
