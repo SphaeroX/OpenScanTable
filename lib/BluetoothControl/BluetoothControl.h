@@ -15,7 +15,7 @@ void sendKeystroke(uint8_t key)
     if (bleKeyboard.isConnected())
     {
         Serial.println("Sending Space");
-        // Keyboard.print(key);
+        bleKeyboard.print(" ");
     }
 }
 

@@ -7,15 +7,9 @@ void setupMotors()
     setPin(STEP_PIN_X, LOW);
     setPin(STEP_PIN_Y, LOW);
     setPin(STEP_PIN_Z, LOW);
-
-    moveAxisX(10, HIGH, 1500);
-    moveAxisX(10, LOW, 1500);
-
-    moveAxisY(10, HIGH, 1500);
-    moveAxisY(10, LOW, 1500);
-
-    moveAxisZ(10, HIGH, 1500);
-    moveAxisZ(10, LOW, 1500);
+    setPin(EN_PIN_X, HIGH);
+    setPin(EN_PIN_Y, HIGH);
+    setPin(EN_PIN_Z, HIGH);
 }
 
 void moveAxisX(int steps, bool direction, int customDelay = STEP_DELAY_X)
@@ -29,7 +23,6 @@ void moveAxisX(int steps, bool direction, int customDelay = STEP_DELAY_X)
         setPin(STEP_PIN_X, LOW);
         delayMicroseconds(customDelay);
     }
-    setPin(EN_PIN_X, HIGH);
 }
 
 void moveAxisY(int steps, bool direction, int customDelay = STEP_DELAY_Y)
@@ -43,7 +36,6 @@ void moveAxisY(int steps, bool direction, int customDelay = STEP_DELAY_Y)
         setPin(STEP_PIN_Y, LOW);
         delayMicroseconds(customDelay);
     }
-    setPin(EN_PIN_Y, HIGH);
 }
 
 void moveAxisZ(int steps, bool direction, int customDelay = STEP_DELAY_Z)
@@ -57,32 +49,46 @@ void moveAxisZ(int steps, bool direction, int customDelay = STEP_DELAY_Z)
         setPin(STEP_PIN_Z, LOW);
         delayMicroseconds(customDelay);
     }
-    setPin(EN_PIN_Z, HIGH);
 }
 
 void adjustScannerDistance(int targetDistance)
 {
     int currentDistance = measureDistance();
-    bool direction = HIGH; // Setzt eine anfängliche Richtung
+    Serial.println(currentDistance);
+    bool direction = LOW; // Startet mit einer angenommenen Richtung
 
-    // Testfahrt, um die korrekte Richtung zu bestimmen
-    moveAxisZ(10, direction); // Macht einen kleinen Schritt in die anfängliche Richtung
+    // Führt eine kleine Testbewegung aus, um die korrekte Richtung zu bestimmen
+    moveAxisZ(100, direction); // Bewegt einen Schritt in der anfänglichen Richtung
     int newDistance = measureDistance();
+    moveAxisZ(100, !direction); // Bewegt einen Schritt in der anfänglichen Richtung
 
-    // Überprüft, ob die Bewegung die Distanz verringert hat
-    if (abs(newDistance - targetDistance) >= abs(currentDistance - targetDistance))
+    // Bestimmt, ob sich der Abstand durch die Bewegung vergrößert oder verkleinert hat
+    if (newDistance > currentDistance)
     {
-        // Wenn die Distanz nicht verringert wurde, ändere die Richtung
-        direction = !direction;
+        // Wenn der Abstand größer wird, ist die anfängliche Richtung falsch
+        direction = !direction; // Wechselt die Richtung
     }
 
     // Anpassung der Distanz mit der ermittelten Richtung
     while (abs(currentDistance - targetDistance) > measureDistanceTolerance)
     {
-        int stepSize = abs(currentDistance - targetDistance) > 10 ? 10 : 1; // Verwendet größere Schritte, wenn die Distanz groß ist, und kleinere, wenn sie nahe am Ziel ist
+        Serial.println(abs(currentDistance - targetDistance));
+        int stepSize = 3000;
+
+        // Bewegt den Scanner in der ermittelten richtigen Richtung
         moveAxisZ(stepSize, direction);
 
+        int previousDistance = currentDistance;
         currentDistance = measureDistance(); // Misst die Distanz erneut
+
+        // Überprüft, ob die Richtung angepasst werden muss, falls der Abstand sich nicht wie erwartet verändert
+        if ((direction == LOW && currentDistance > previousDistance) || (direction == HIGH && currentDistance < previousDistance))
+        {
+            direction = !direction;              // Wechselt die Richtung, falls die Bewegung den Abstand nicht wie erwartet anpasst
+            moveAxisZ(stepSize, direction);      // Macht einen Schritt in der neuen Richtung
+            currentDistance = measureDistance(); // Misst die Distanz erneut
+        }
+        delay(500);
     }
 }
 

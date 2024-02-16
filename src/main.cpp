@@ -2,8 +2,8 @@
 #include "config.h"
 #include "EepromControl.h"
 #include "IOExpander.h"
-#include "MotorControl.h"
 #include "UltrasonicSensor.h"
+#include "MotorControl.h"
 #include "BluetoothControl.h"
 #include "WebInterface.h"
 #include "ScanRoutine.h"
@@ -36,11 +36,22 @@ void loop()
   case 200:
     Serial.println("START REVO SCAN IN 5 SECOUNDS");
     delay(5000);
-    performRevoScan(20, 17, 10, 3, 100, 1000);
+    performRevoScan(20, 18, 20, 3, pauseBetweenScanmoves);
     commandState = 0;
     break;
   case 999:
-    testEEPROM();
+    // Serial.println(measureDistance());
+    // testEEPROM();
+    moveAxisX(6400, true);
+    delay(1000);
+    moveAxisY(200, true);
+    delay(1000);
+    moveAxisY(200, false);
+    delay(1000);
+    moveAxisZ(1600, true);
+    delay(1000);
+    moveAxisZ(1600, false);
+    delay(1000);
     commandState = 0;
     break;
   }
