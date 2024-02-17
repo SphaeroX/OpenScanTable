@@ -23,13 +23,15 @@ void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations,
 
   // Berechnung der Schritte pro Grad
   float stepsPerDegree = 6400.0 / 360.0;
+  int ySteps = round(yDegrees * stepsPerDegree);
+  int zSteps = round(zDegrees * stepsPerDegree);
 
   for (int yRot = 0; yRot < yRotations; yRot++)
   {
-    int ySteps = round(yDegrees * stepsPerDegree);
     for (int zRot = 0; zRot < zRotations; zRot++)
     {
-      int zSteps = round(zDegrees * stepsPerDegree);
+      sendKeystroke(revoScanTrigger); // Anpassen an deine Implementierung für die Auslösung
+      delay(pauseDuration);
 
       // Bewege X-Achse um angegebene Gradzahl
       Serial.println("Rotate Z");
@@ -43,10 +45,6 @@ void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations,
         // adjustScannerDistance(initialDistance); // Korrigiert die Distanz zurück zum Initialwert
         // delay(pauseDuration);
       }
-
-      // Auslösen des Scanners (hier symbolisch durch Senden eines Leerzeichens über Bluetooth)
-      sendKeystroke(revoScanTrigger); // Anpassen an deine Implementierung für die Auslösung
-      delay(pauseDuration);
     }
 
     // Bewege Y-Achse nach jeder Z-Rotation um die angegebene Gradzahl
@@ -54,6 +52,8 @@ void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations,
     Serial.println("Rotate Y");
     delay(pauseDuration);
   }
+
+  moveAxisY(ySteps * yRotations, false); // Bewege X-Achse wieder zurück zum Nullwert
 }
 
 #endif

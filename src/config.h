@@ -33,9 +33,6 @@
 // const char *BLUETOOTH_NAME = "3DScannerControl";
 
 // Scaneinstellungen
-const int SCAN_ANGLE_STEP = 20;     // Grad pro Schritt um die Z-Achse
-const int Y_AXIS_STEP = 30;         // Grad pro Schritt für die Y-Achse
-const int TARGET_DISTANCE_MM = 100; // Zielentfernung in mm
 
 // Motor-Konfiguration
 #define STEP_DELAY_X 400 // Z_ENABLE
@@ -47,6 +44,11 @@ int commandState = 0;
 int initialDistance = 0;
 int pauseBetweenScanmoves = 1000;
 int measureDistanceTolerance = 500;
+int scanAngleZ = 20;
+int scanStepsZ = 18;
+int scanAngleY = 18;
+int scanStepsY = 3;
+int scanShotPause = 1000;
 uint8_t revoScanTrigger = ' ';
 
 #endif

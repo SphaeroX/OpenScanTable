@@ -31,6 +31,13 @@ void handleRoot()
 void handleStartRevoscan()
 {
     commandState = 200;
+
+    scanAngleZ = server.arg("scanAngleZ").toInt();
+    scanStepsZ = server.arg("scanStepsZ").toInt();
+    scanAngleY = server.arg("scanAngleY").toInt();
+    scanStepsY = server.arg("scanStepsY").toInt();
+    scanShotPause = server.arg("scanShotPause").toInt();
+
     server.send(200, "text/plain", "Starting revo scan");
 }
 
