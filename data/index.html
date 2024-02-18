@@ -8,14 +8,14 @@
     <p>This is a web page hosted on an ESP32.</p>
     <div class="div">
       <form id="revoscanForm" action="/startRevoscan" method="post">
-        <label for="scanAngleZ">Rotation Angle Z (degrees):</label>
-        <input type="number" id="scanAngleZ" name="scanAngleZ" min="0" max="360" step="1" value="20" required /><br />
-        <label for="scanAngleY">Rotation Angle Y (degrees):</label>
-        <input type="number" id="scanAngleY" name="scanAngleY" min="0" max="360" step="1" value="18" required /><br />
-        <label for="scanStepsZ">Steps Z:</label>
-        <input type="number" id="scanStepsZ" name="scanStepsZ" min="1" value="25" required /><br />
-        <label for="scanStepsY">Steps Y:</label>
-        <input type="number" id="scanStepsY" name="scanStepsY" value="3" required /><br />
+        <label for="zDegrees">Rotation Angle Z (degrees):</label>
+        <input type="number" id="zDegrees" name="zDegrees" min="0" max="360" step="1" value="20" required /><br />
+        <label for="yDegrees">Rotation Angle Y (degrees):</label>
+        <input type="number" id="yDegrees" name="yDegrees" min="0" max="360" step="1" value="18" required /><br />
+        <label for="zRotations">Steps Z:</label>
+        <input type="number" id="zRotations" name="zRotations" min="1" value="25" required /><br />
+        <label for="yRotations">Steps Y:</label>
+        <input type="number" id="yRotations" name="yRotations" value="3" required /><br />
         <label for="scanShotPause">Pause between Shots (ms):</label>
         <input type="number" id="scanShotPause" name="scanShotPause" min="1" value="1000" required /><br />
         <input type="button" value="Start Revoscan" onclick="submitRevoscan()" />
@@ -23,7 +23,7 @@
     </div>
 
     <div class="div">
-      <form id="testForm" action="/test" method="post">
+      <form id="testForm" action="/testAxes" method="post">
         <input type="button" value="Test Axis" onclick="submitTest()" />
       </form>
     </div>
@@ -43,7 +43,7 @@
       }
 
       function submitTest() {
-        var form = document.getElementById("testForm");
+        var form = document.getElementById("testAxes");
         var formData = new FormData(form);
 
         var xhr = new XMLHttpRequest();

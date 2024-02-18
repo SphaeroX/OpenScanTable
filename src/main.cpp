@@ -37,21 +37,20 @@ void loop()
     Serial.println("START REVO SCAN IN 5 SECOUNDS");
     delay(5000);
     Serial.print("scanAngleZ: ");
-    Serial.print(scanAngleZ);
+    Serial.print(zDegrees);
     Serial.print(", scanStepsZ: ");
-    Serial.print(scanStepsZ);
+    Serial.print(zRotations);
     Serial.print(", scanAngleY: ");
-    Serial.print(scanAngleY);
+    Serial.print(yDegrees);
     Serial.print(", scanStepsY: ");
-    Serial.print(scanStepsY);
+    Serial.print(yRotations);
     Serial.print(", pauseBetweenScanmoves: ");
     Serial.println(pauseBetweenScanmoves);
-    performRevoScan(scanAngleZ, scanStepsZ, scanAngleY, scanStepsY, pauseBetweenScanmoves);
+    performRevoScan(zDegrees, zRotations, yDegrees, yRotations, pauseBetweenScanmoves);
     commandState = 0;
     break;
-  case 999:
-    // Serial.println(measureDistance());
-    // testEEPROM();
+  case 900:
+    // todo textaxes zu motor
     moveAxisX(3000, true);
     delay(1000);
     moveAxisY(200, true);

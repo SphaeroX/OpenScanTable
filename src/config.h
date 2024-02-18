@@ -44,10 +44,10 @@ int commandState = 0;
 int initialDistance = 0;
 int pauseBetweenScanmoves = 1000;
 int measureDistanceTolerance = 500;
-int scanAngleZ = 20;
-int scanStepsZ = 18;
-int scanAngleY = 18;
-int scanStepsY = 3;
+int zDegrees = 20;
+int zRotations = 18;
+int yDegrees = 18;
+int yRotations = 3;
 int scanShotPause = 1000;
 uint8_t revoScanTrigger = ' ';
 
