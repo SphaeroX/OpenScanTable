@@ -2,7 +2,7 @@
 #include "config.h"
 #include "EepromControl.h"
 #include "IOExpander.h"
-#include "UltrasonicSensor.h"
+#include "DistanceSensor.h"
 #include "MotorControl.h"
 #include "BluetoothControl.h"
 #include "WebInterface.h"
@@ -15,7 +15,7 @@ void setup()
   Serial.begin(115200);
   setupIOExpander();
   setupMotors();
-  setupUltrasonic();
+  setupDistanceSensor();
   setupBluetooth();
   setupWebServer();
   setupEEPROM(512);
@@ -51,24 +51,26 @@ void loop()
     break;
   case 900:
     // todo textaxes zu motor
+    Serial.println("Testing X");
     moveAxisX(3000, true);
     delay(1000);
-    moveAxisY(200, true);
+    Serial.println("Testing Y (CW/CCW)");
+    moveAxisY(1000, true, true);
+    moveAxisY(1000, false, true);
+    moveAxisY(1000, true, true);
+    moveAxisY(1000, false, true);
+    moveAxisY(1000, true, true);
+    moveAxisY(1000, false);
     delay(1000);
-    moveAxisY(200, false);
-    delay(1000);
-    moveAxisY(200, true);
-    delay(1000);
-    moveAxisY(200, false);
-    delay(1000);
+    Serial.println("Testing Z (DOWN/UP)");
     moveAxisZ(1600, true);
-    delay(1000);
+    moveAxisZ(1600, false);
+    moveAxisZ(1600, true);
+    moveAxisZ(1600, false);
+    moveAxisZ(1600, true);
     moveAxisZ(1600, false);
     delay(1000);
-    moveAxisZ(1600, true);
-    delay(1000);
-    moveAxisZ(1600, false);
-    delay(1000);
+    Serial.println("DONE");
     commandState = 0;
     break;
 

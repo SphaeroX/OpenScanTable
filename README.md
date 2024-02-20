@@ -20,11 +20,7 @@ Welcome to the OpenScanTable project – a modular platform for automated 3D sca
 
 ## Additional Hardware
 
-To assemble OpenScanTable, you will need some additional hardware:
-
-- 3 NEMA 17 stepper motors
-- Distance sensor for automatic adjustment
-
+To assemble OpenScanTable, you will need some additional hardware-
 For a complete list of parts and specifications, please refer to the [BOM.md](./BOM.md)(Bill of Materials) in this repository.
 
 ## Use Cases
@@ -33,22 +29,63 @@ For a complete list of parts and specifications, please refer to the [BOM.md](./
 - **Photography:** Ideal for product photography, research and development, where varying perspectives are needed.
 - **Photogrammetry:** Enables the creation of 3D models from a series of photographs, including techniques like focus stacking.
 
-## Getting Started
+## Installation Guide for OpenScanStable
 
-### Prerequisites
+Follow these steps to install and set up your OpenScanStable system. This guide assumes you have a basic understanding of electronics and are familiar with Visual Studio Code and PlatformIO.
 
-- MKS Tinybee board with ESP32
-- Compatible recording devices (3D scanner, camera, etc.)
-- PlatformIO with Arduino Library
-- Required hardware as listed in BOM.md
+### Pre-requisites
 
-### Installation
+- Visual Studio Code installed on your computer.
+- Basic knowledge of using Visual Studio Code and PlatformIO.
+- A MKS TinyBee board or a compatible board.
 
-1. Clone the repository to your local computer.
-2. Open the project in PlatformIO.
-3. Upload the code to your MKS Tinybee board.
-4. Connect your recording device to the mount.
-5. Launch the web interface to control the scanning routines.
+### Installation Steps
+
+1. **Download and Install PlatformIO Plugin in Visual Studio Code**
+
+   - Open Visual Studio Code.
+   - Navigate to the Extensions view by clicking on the square icon on the sidebar or pressing `Ctrl+Shift+X`.
+   - Search for "PlatformIO IDE".
+   - Click on "Install" to install the PlatformIO IDE extension.
+
+2. **Clone the Repository and Open the Project**
+
+   - Use Git to clone the repository to your local computer. If you're not familiar with Git, you can find numerous guides online to get started.
+   - Once cloned, open the folder in Visual Studio Code by selecting `File > Open Folder` and navigating to the cloned project folder.
+
+3. **Prepare and Upload the Firmware to the MKS Tinybee Board**
+
+   - In the PlatformIO sidebar, navigate to the project environment for the MKS Tinybee board.
+   - **Build File System Image**
+     - First, you need to build the file system image that will be used by the ESP32. This contains the web interface and other necessary files.
+     - Find and click on the "Build Filesystem Image" task to compile the image.
+   - **Upload File System Image**
+     - After building the file system image, upload it to your board by clicking on the "Upload Filesystem Image" task.
+   - **Build**
+     - Next, compile the main firmware by selecting the "Build" task. This compiles all the source code into a binary file.
+   - **Upload**
+     - Once the build process is complete, upload the firmware to your MKS Tinybee board by selecting the "Upload" task.
+
+4. **Boot the Mainboard**
+
+   - After uploading the firmware, reboot the MKS Tinybee board to start the newly uploaded software.
+
+5. **Connect Laptop/PC to ESP32 via Bluetooth (For Keyboard Input)**
+
+   - Enable Bluetooth on your laptop or PC.
+   - Search for available Bluetooth devices and connect to the ESP32 module named usually as `ESP32 Keyboard` or a similar name provided in your project documentation.
+
+6. **Connect to OpenScanStable via WiFi for the Interface**
+
+   - On your computer or a WiFi-enabled device, search for the WiFi network named "OpenScanTable".
+   - Connect to this network using the password provided in your project documentation.
+   - Once connected, you can access the web interface by navigating to the IP address specified in the project documentation.
+
+7. **Perform Motor Test and Adjust Drivers**
+
+   - It's crucial to perform a motor test to ensure everything is working correctly.
+   - Access the motor test feature through the web interface. Follow the instructions provided to initiate the test.
+   - While testing, adjust the motor drivers to supply as much current as needed but as little as possible to prevent overheating and ensure optimal performance.
 
 ## Preview
 

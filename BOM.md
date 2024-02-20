@@ -1,21 +1,39 @@
-# Bill of Materials (BOM) for OpenScanTable
+# OpenScanStable - Bill of Materials (BOM)
 
-This document provides a detailed list of all parts required to assemble the OpenScanTable. Please note that the listed parts and specifications are placeholders and should be adjusted based on your specific requirements and the availability of components.
+Below is the Bill of Materials needed to assemble the OpenScanStable project. This list includes 3D-printed parts, electronic components, and other necessary hardware.
 
-| Item No. | Part Name             | Quantity | Description                                        | Link (optional)  |
-| -------- | --------------------- | -------- | -------------------------------------------------- | ---------------- |
-| 1        | NEMA 17 Stepper Motor | 3        | Used for controlling the movements of the platform | [ExampleLink](#) |
-| 2        | MKS Tinybee Board     | 1        | The main control board featuring an ESP32          | [ExampleLink](#) |
-| 3        | Distance Sensor       | 1        | For automatic adjustment of the scanner's distance | [ExampleLink](#) |
-| 4        | Mounting Brackets     | 3        | To secure the stepper motors to the frame          | [ExampleLink](#) |
-| 5        | Power Supply          | 1        | To power the MKS Tinybee board and the motors      | [ExampleLink](#) |
-| 6        | Screws & Nuts         | Various  | For assembling and securing components             | [ExampleLink](#) |
-| 7        | 3D Printed Parts      | Various  | Custom parts for mounts and frame                  | [ExampleLink](#) |
+## 3D Printed Parts
 
-## Notes
+| Part Name       | Quantity | Notes      |
+| --------------- | -------- | ---------- |
+| Base            | 1        | 3D printed |
+| Table           | 1        | 3D printed |
+| Rocker          | 1        | 3D printed |
+| MGN12_Mount     | 1        | 3D printed |
+| RP_Mini_Mount   | 1        | 3D printed |
+| Drive           | 1        | 3D printed |
+| Mainboard_Mount | 1        | 3D printed |
+| Coupler         | 1        | 3D printed |
 
-- The quantities and parts listed are for reference; please adjust according to your project's needs.
-- For 3D printed parts, refer to the `hardware` folder in the main repository for files and printing instructions.
-- Ensure compatibility of all parts before purchasing, especially the stepper motors and control board.
+## Electronic Components
 
-This BOM is a starting point for assembling your OpenScanTable. Depending on your modifications or enhancements, additional parts may be required.
+| Component                    | Quantity | Specification                     |
+| ---------------------------- | -------- | --------------------------------- |
+| NEMA 17 Motor                | 1        | 42x20mm                           |
+| NEMA 17 Motors               | 2        | 42x34mm                           |
+| MKS TinyBee Board            | 1        | -                                 |
+| Motor Driver (e.g., DRV8825) | 3        | -                                 |
+| 24V Power Supply             | 1        | 4A                                |
+| VL53L0X Sensor               | 1        | -                                 |
+| Sensor Cables                | -        | Preferably with Dupont Connectors |
+
+## Mechanical Components
+
+| Component                          | Quantity | Specification                     |
+| ---------------------------------- | -------- | --------------------------------- |
+| MGN12H Linear Rail                 | 1        | 250mm Length                      |
+| TR8x8 Lead Screw with T8 Brass Nut | 1        | min 250mm, Acme Thread, 2mm Pitch |
+| M3 Screws (20x12mm)                | 20       | -                                 |
+| M3 Screws (8x10mm)                 | 10       | -                                 |
+
+Please make sure to source high-quality components to ensure the stability and reliability of your OpenScanStable build. This BOM is provided as a guideline and may be adjusted based on availability or project updates.
