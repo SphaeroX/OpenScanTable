@@ -2,6 +2,12 @@
 
 Welcome to the OpenScanTable project – a modular platform for automated 3D scanning and photography. This project enables users to precisely capture objects from various angles by providing a customizable mount suitable for a wide range of recording devices, including the Revopoint Mini V1 3D scanner and webcams.
 
+## Preview
+
+![OpenScanTable in action](/media/preview.jpg)
+
+[OpenScanTable at YouTube](https://www.youtube.com/shorts/4-4UUVLyI7E "OpenScanTable at YouTube")
+
 ## Key Features
 
 - **Modular Design:** Adaptable to different recording devices such as 3D scanners, cameras, and more.
@@ -96,12 +102,6 @@ Follow these steps to install and set up your OpenScanStable system. This guide 
      - Supply as much current as necessary for optimal performance but as little as possible to prevent overheating. This balance ensures the longevity and reliability of the motors and drivers.
 
 By following these detailed steps, you can ensure that the motors for the OpenScanStable system are correctly configured and adjusted for optimal performance. This careful setup is crucial for achieving accurate scanning results and maintaining the system's reliability.
-
-## Preview
-
-![OpenScanTable in action](/media/preview.jpg)
-
-[OpenScanTable at YouTube](https://www.youtube.com/shorts/4-4UUVLyI7E "OpenScanTable at YouTube")
 
 ## Contributing
 
