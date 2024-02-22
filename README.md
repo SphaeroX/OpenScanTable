@@ -27,7 +27,7 @@ Welcome to the OpenScanTable project – a modular platform for automated 3D sca
 ## Additional Hardware
 
 To assemble OpenScanTable, you will need some additional hardware-
-For a complete list of parts and specifications, please refer to the [BOM.md](./BOM.md)(Bill of Materials) in this repository.
+For a complete list of parts and specifications, please refer to the [hardware/BOM.md](./hardware/BOM.md)(Bill of Materials) in this repository.
 
 ## Use Cases
 

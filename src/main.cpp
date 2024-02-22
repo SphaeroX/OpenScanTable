@@ -34,8 +34,7 @@ void loop()
     commandState = 0;
     break;
   case 200:
-    Serial.println("START REVO SCAN IN 5 SECOUNDS");
-    delay(5000);
+
     Serial.print("scanAngleZ: ");
     Serial.print(zDegrees);
     Serial.print(", scanStepsZ: ");
@@ -44,9 +43,11 @@ void loop()
     Serial.print(yDegrees);
     Serial.print(", scanStepsY: ");
     Serial.print(yRotations);
-    Serial.print(", pauseBetweenScanmoves: ");
-    Serial.println(pauseBetweenScanmoves);
-    performRevoScan(zDegrees, zRotations, yDegrees, yRotations, pauseBetweenScanmoves);
+    Serial.print(", scanShotPause: ");
+    Serial.println(scanShotPause);
+    Serial.println("START REVO SCAN IN 5 SECOUNDS");
+    delay(5000);
+    performRevoScan(zDegrees, zRotations, yDegrees, yRotations, scanShotPause);
     commandState = 0;
     break;
   case 900:
@@ -73,7 +74,11 @@ void loop()
     Serial.println("DONE");
     commandState = 0;
     break;
-
+  case 910:
+    Serial.print("Testing Distance: ");
+    Serial.println(measureDistance());
+    commandState = 0;
+    break;
   case 990:
     moveAxisX(30000, true);
     commandState = 0;

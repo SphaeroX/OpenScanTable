@@ -1,23 +1,26 @@
 <!doctype html>
 <html>
   <head>
-    <title>ESP32 Web Server</title>
+    <title>OpenScanTable</title>
   </head>
   <body>
-    <h1>Hello from ESP32 AP!</h1>
-    <p>This is a web page hosted on an ESP32.</p>
     <div class="div">
       <form id="revoscanForm" action="/startRevoscan" method="post">
-        <label for="zDegrees">Rotation Angle Z (degrees):</label>
-        <input type="number" id="zDegrees" name="zDegrees" min="0" max="360" step="1" value="20" required /><br />
-        <label for="yDegrees">Rotation Angle Y (degrees):</label>
-        <input type="number" id="yDegrees" name="yDegrees" min="0" max="360" step="1" value="18" required /><br />
         <label for="zRotations">Steps Z:</label>
         <input type="number" id="zRotations" name="zRotations" min="1" value="25" required /><br />
+        <label for="zDegrees">Rotation Angle Z (degrees):</label>
+        <input type="number" id="zDegrees" name="zDegrees" min="0" max="360" step="1" value="20" required /><br />
+
         <label for="yRotations">Steps Y:</label>
-        <input type="number" id="yRotations" name="yRotations" value="3" required /><br />
+        <input type="number" id="yRotations" name="yRotations" value="2" required /><br />
+        <label for="yDegrees">Rotation Angle Y (degrees):</label>
+        <input type="number" id="yDegrees" name="yDegrees" min="0" max="360" step="1" value="40" required /><br />
         <label for="scanShotPause">Pause between Shots (ms):</label>
         <input type="number" id="scanShotPause" name="scanShotPause" min="1" value="1000" required /><br />
+
+        <label for="autoAdjust">Auto Adjust Distance?</label>
+        <input type="checkbox" id="autoAdjust" name="autoAdjust" value="1" /><br />
+
         <input type="button" value="Start Revoscan" onclick="submitRevoscan()" />
       </form>
     </div>

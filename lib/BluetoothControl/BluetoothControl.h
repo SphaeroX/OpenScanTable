@@ -10,12 +10,12 @@ void setupBluetooth()
     bleKeyboard.begin();
 }
 
-void sendKeystroke(uint8_t key)
+void sendKeystroke(char key)
 {
     if (bleKeyboard.isConnected())
     {
         Serial.println("Sending Space");
-        bleKeyboard.print(" ");
+        bleKeyboard.print(key);
     }
 }
 

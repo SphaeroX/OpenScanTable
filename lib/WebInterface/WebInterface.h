@@ -37,13 +37,23 @@ void handleStartRevoscan()
     yDegrees = server.arg("yDegrees").toInt();
     yRotations = server.arg("yRotations").toInt();
     scanShotPause = server.arg("scanShotPause").toInt();
+    int autoAdjustValue = server.arg("autoAdjust").toInt();
+
+    if (autoAdjustValue == 1)
+    {
+        autoAdjust = true;
+    }
+    else
+    {
+        autoAdjust = false;
+    }
 
     server.send(200, "text/plain", "Starting revo scan");
 }
 
 void handleSaveSettings()
 {
-    pauseBetweenScanmoves = server.arg("pauseBetweenScanmoves").toInt();
+    scanShotPause = server.arg("scanShotPause").toInt();
     revoScanTrigger = server.arg("revoScanTrigger").toInt();
 
     commandState = 100;
@@ -53,6 +63,12 @@ void handleSaveSettings()
 void handleTestAxes()
 {
     commandState = 900;
+    server.send(200, "text/plain", "Test");
+}
+
+void handleTestDistance()
+{
+    commandState = 910;
     server.send(200, "text/plain", "Test");
 }
 
@@ -78,6 +94,7 @@ void setupWebServer()
     server.on("/startRevoscan", handleStartRevoscan);
     server.on("/saveSettings", handleSaveSettings);
     server.on("/testAxes", handleTestAxes);
+    server.on("/testDistance", handleTestDistance);
 
     // Start server
     server.begin();

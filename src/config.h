@@ -3,7 +3,8 @@
 #define CONFIG_H
 
 // PIN-Konfigurationen Anschlüsse
-#define ULTRASONIC_ECHO 33 // X -
+#define ULTRASONIC_ECHO 34    // Y -
+#define ULTRASONIC_TRIGGER 22 // I2S: BEEPER
 
 // PIN-Konfigurationen Expander
 #define EN_PIN_X 1   // X_ENABLE
@@ -25,10 +26,6 @@
 #define LATCH_PIN 26 // I2S_WS
 #define DATA_PIN 27  // I2S_DATA
 
-// I2C-Konfigurationen
-#define SDA 21 // LCD_EN
-#define SCL 22 // Z-
-
 // Bluetooth-Konfiguration
 // const char *BLUETOOTH_NAME = "3DScannerControl";
 
@@ -41,14 +38,16 @@
 
 // Globale Variablen
 int commandState = 0;
-int initialDistance = 0;
-int pauseBetweenScanmoves = 1000;
-int measureDistanceTolerance = 50;
+int measureDistanceTolerance = 20; // mm at this distance an adujst will be made
+int measureDistanceFailMax = 50;   // mm at this distance no adjust will be made because wrong focus
+int measureDistanceMinChange = 10; // mm the minimum movement between measrements to be failed
+int adujstDistanceSteps = 2000;
 int zDegrees = 20;
 int zRotations = 18;
 int yDegrees = 18;
 int yRotations = 3;
-int scanShotPause = 1000;
-uint8_t revoScanTrigger = ' ';
+int scanShotPause = 500;
+boolean autoAdjust = false;
+char revoScanTrigger = ' ';
 
 #endif

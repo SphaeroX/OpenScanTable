@@ -59,41 +59,74 @@ void moveAxisZ(int steps, bool direction, boolean hold = false, int customDelay 
 
 void adjustScannerDistance(int targetDistance)
 {
-    int currentDistance = measureDistance();
-    Serial.println(currentDistance);
-    bool movingCloser = true; // Startet mit der Annahme, dass wir uns dem Ziel nähern
+    int currentDistance = measureDistance(); // Misst die aktuelle Entfernung
+    bool wasTooClose = false;                // Indikator, ob die Distanz einmal zu nah war
+    bool wasTooFar = false;                  // Indikator, ob die Distanz einmal zu weit war
+    int differences[3] = {0, 0, 0};          // Speichert die letzten drei Differenzen
+    int diffIndex = 0;                       // Index für das Speichern der aktuellen Differenz
+    int stepsMade = 0;                       // Zählt die Anzahl der gemachten Schritte
+    int lastValidDistance = currentDistance; // Speichert die letzte gültige Distanz
 
-    while (abs(currentDistance - targetDistance) > measureDistanceTolerance)
+    // Schleife, bis die Differenz zwischen der gemessenen und der Zielentfernung innerhalb der Toleranz liegt
+    while (abs(targetDistance - currentDistance) > measureDistanceTolerance)
     {
-        Serial.print("Adjust distance, remaining: ");
-        Serial.println(abs(currentDistance - targetDistance));
+        bool direction = (currentDistance > targetDistance);   // Bestimmt die Richtung: näher ran, wenn aktuell > Ziel
+        moveAxisZ(adujstDistanceSteps, direction, false, 150); // Bewegt die Z-Achse entsprechend
+        stepsMade++;                                           // Inkrementiert die Anzahl der Schritte
+        delay(200);                                            // relax time
 
-        // Bestimmt die Bewegungsrichtung basierend darauf, ob wir uns dem Ziel nähern oder entfernen
-        bool direction;
+        int previousDistance = currentDistance; // Speichert die vorherige Distanz
+        currentDistance = measureDistance();    // Misst die Entfernung erneut nach der Anpassung
+
+        // Überprüft, ob eine signifikante Änderung stattgefunden hat
+        if (abs(currentDistance - lastValidDistance) < measureDistanceMinChange)
+        { // Minimal erforderliche Änderung nicht erreicht
+            Serial.print("Insignificant change, possible measurement error: ");
+            Serial.println(abs(currentDistance - lastValidDistance));
+            continue; // Überspringt den Rest der Schleife und misst erneut
+        }
+        lastValidDistance = currentDistance; // Aktualisiert die letzte gültige Distanz
+
+        // Prüft, ob die Distanz einmal in die falsche Richtung überschritten wurde
+        if (currentDistance < targetDistance)
+            wasTooClose = true;
         if (currentDistance > targetDistance)
-        {
-            direction = movingCloser; // Bewegung in Richtung Ziel
-        }
-        else
-        {
-            direction = !movingCloser; // Bewegung weg vom Ziel
-        }
+            wasTooFar = true;
 
-        int stepSize = 3000;            // Festgelegte Schrittgröße
-        moveAxisZ(stepSize, direction); // Bewegt den Scanner
-
-        int newDistance = measureDistance(); // Misst die Distanz erneut
-        if (abs(newDistance - targetDistance) >= abs(currentDistance - targetDistance))
+        // Abbruchbedingung, wenn die Distanz zuerst zu klein und dann zu groß wird oder umgekehrt
+        if ((wasTooClose && currentDistance > targetDistance) || (wasTooFar && currentDistance < targetDistance))
         {
-            // Wenn sich der Abstand zum Ziel nicht verringert hat, ändere die Bewegungsrichtung
-            movingCloser = !movingCloser;
-            moveAxisZ(stepSize / 2, direction); // Bewegt den Scanner
-            Serial.print("Changing direction due to no improvement, remaining:");
-            Serial.println(abs(newDistance - targetDistance));
+            Serial.println("Invalid adjustment");
+            break; // Beendet die Schleife und damit die Anpassung
         }
 
-        currentDistance = newDistance; // Aktualisiere den aktuellen Abstand für den nächsten Durchgang
-        delay(500);                    // Kurze Verzögerung, um zu viel schnelle Bewegung zu vermeiden
+        // Speichert die aktuelle Differenz und aktualisiert den Index
+        differences[diffIndex] = targetDistance - currentDistance;
+        diffIndex = (diffIndex + 1) % 3; // Sorgt dafür, dass der Index im Bereich von 0 bis 2 bleibt
+
+        // Überprüft, ob die letzten drei Differenzen gleich sind
+        if (differences[0] == differences[1] && differences[1] == differences[2] && differences[0] != 0)
+        {
+            Serial.print("Adjustment failed: same difference three times: ");
+            Serial.println(differences[0]);
+
+            break; // Beendet die Schleife und damit die Anpassung
+        }
+
+        Serial.print("Adjust Difference :");
+        Serial.println(targetDistance - currentDistance);
+    }
+
+    if (stepsMade > 0)
+    {
+        // Berechnet die Richtung für die Rückfahrt (umgekehrt zur letzten Bewegungsrichtung)
+        bool returnDirection = !(currentDistance > targetDistance);
+        // Fährt die Z-Achse zurück in die Ausgangsposition
+        for (int i = 0; i < stepsMade; i++)
+        {
+            Serial.println("Returning to original position");
+            moveAxisZ(adujstDistanceSteps, returnDirection, false, 150);
+        }
     }
 }
 

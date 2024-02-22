@@ -19,11 +19,36 @@
 void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations, int pauseDuration)
 {
   // Messung und Speicherung der initialen Distanz zu Beginn des Scans
-  initialDistance = measureDistance();
-  yRotations += 1;
+  // Verbesserte Initialmessung
+  int initialDistance = 0;
 
-  Serial.print("initialDistance: ");
-  Serial.println(initialDistance);
+  if (autoAdjust)
+  {
+    int lowestDistance = measureDistance();
+    int currentDistance;
+
+    for (int i = 0; i < 5; i++)
+    {
+      moveAxisX(150, true);                // Bewegt die Y-Achse um 10 Schritte; Richtung 'true' angenommen
+      currentDistance = measureDistance(); // Führt eine Distanzmessung durch
+
+      if (currentDistance < lowestDistance)
+      {
+        lowestDistance = currentDistance; // Aktualisiert die niedrigste Distanz
+      }
+    }
+
+    // Setzt die Y-Achse zurück zum Ausgangspunkt, bevor der eigentliche Scan beginnt
+    moveAxisX(750, true); // Annahme: Bewegung zurück; Wert muss ggf. angepasst werden
+
+    initialDistance = lowestDistance; // Setzt die niedrigste gemessene Distanz als initiale Distanz
+    Serial.print("initialDistance: ");
+    Serial.println(initialDistance);
+  }
+  if (yRotations == 0)
+  {
+    yRotations = 1;
+  }
 
   // Berechnung der Schritte pro Grad
   float stepsPerDegree = 6400.0 / 360.0;
@@ -34,31 +59,34 @@ void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations,
   {
     for (int zRot = 0; zRot < zRotations; zRot++)
     {
-      sendKeystroke(revoScanTrigger); // Anpassen an deine Implementierung für die Auslösung
-      delay(pauseDuration);
-
       // Bewege X-Achse um angegebene Gradzahl
       Serial.println("Rotate Z");
-      moveAxisX(zSteps, true); // Richtung ist hier als 'true' angenommen; anpassen, falls nötig
-      delay(pauseDuration);
+      moveAxisX(zSteps, true);        // Richtung ist hier als 'true' angenommen; anpassen, falls nötig
+      delay(pauseDuration);           // relax time
+      sendKeystroke(revoScanTrigger); // Anpassen an deine Implementierung für die Auslösung
+      delay(200);
 
       // Überprüfe die Distanz und passe an, wenn nötig
-      long currentDistance = measureDistance();
-      Serial.print("currentDistancwe: ");
-      Serial.println(currentDistance);
-      if (abs(currentDistance - initialDistance) > measureDistanceTolerance)
+      if (autoAdjust)
       {
-        Serial.print("Correction dif:");
-        Serial.println(abs(currentDistance - initialDistance));
-        adjustScannerDistance(initialDistance); // Korrigiert die Distanz zurück zum Initialwert
-        delay(pauseDuration);
+        long currentDistance = measureDistance();
+        Serial.print("initialDistance: ");
+        Serial.println(initialDistance);
+        Serial.print("currentDistance: ");
+        Serial.println(currentDistance);
+        Serial.print("difference: ");
+        Serial.println(initialDistance - currentDistance);
+
+        if (abs(currentDistance - initialDistance) > measureDistanceTolerance && abs(currentDistance - initialDistance) <= measureDistanceFailMax)
+        {
+          adjustScannerDistance(initialDistance); // Korrigiert die Distanz zurück zum Initialwert
+        }
       }
     }
 
     // Bewege Y-Achse nach jeder Z-Rotation um die angegebene Gradzahl
     moveAxisY(ySteps, true, true); // Richtung ist hier ebenfalls als 'true' angenommen; anpassen, falls nötig
     Serial.println("Rotate Y");
-    delay(pauseDuration);
   }
 
   moveAxisY(ySteps * yRotations, false); // Bewege X-Achse wieder zurück zum Nullwert
