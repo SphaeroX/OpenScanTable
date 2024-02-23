@@ -9,6 +9,8 @@ void setupDistanceSensor()
 
 int measureDistance(int numSamples = 5)
 {
+    delay(300); // relax time
+
     int sum = 0;
     for (int i = 0; i < numSamples; i++)
     {

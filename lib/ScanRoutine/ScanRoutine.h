@@ -2,6 +2,60 @@
 #ifndef SCAN_ROUTINE_H
 #define SCAN_ROUTINE_H
 
+int getMedianDistance(int measurementsPerDirection)
+{
+  const int totalMeasurements = measurementsPerDirection * 2; // Gesamtzahl der Messungen
+
+  int distances[totalMeasurements]; // Speichert die Messwerte
+
+  // Führe Messungen mit Bewegung in eine Richtung durch
+  for (int i = 0; i < measurementsPerDirection; i++)
+  {
+    moveAxisX(150, true);             // Bewegt die Achse; Richtung 'true'
+    distances[i] = measureDistance(); // Speichert den Messwert
+  }
+
+  // Führe Messungen mit Bewegung in die entgegengesetzte Richtung durch
+  for (int i = measurementsPerDirection; i < totalMeasurements; i++)
+  {
+    moveAxisX(150, false);            // Bewegt die Achse; Richtung 'false'
+    distances[i] = measureDistance(); // Speichert den Messwert
+  }
+
+  // Sortiere die Messwerte, um den Median zu bestimmen
+  for (int i = 0; i < totalMeasurements - 1; i++)
+  {
+    for (int j = 0; j < totalMeasurements - i - 1; j++)
+    {
+      if (distances[j] > distances[j + 1])
+      {
+        // Tausche Elemente
+        int temp = distances[j];
+        distances[j] = distances[j + 1];
+        distances[j + 1] = temp;
+      }
+    }
+  }
+
+  // Berechne den Median
+  int medianDistance;
+  if (totalMeasurements % 2 == 0)
+  {
+    // Gerade Anzahl von Messungen, nimm den Durchschnitt der zwei mittleren Werte
+    medianDistance = (distances[totalMeasurements / 2 - 1] + distances[totalMeasurements / 2]) / 2;
+  }
+  else
+  {
+    // Ungerade Anzahl von Messungen, nimm den mittleren Wert
+    medianDistance = distances[totalMeasurements / 2];
+  }
+
+  // Verwende medianDistance für weitere Aktionen
+  Serial.print("Median Distance: ");
+  Serial.println(medianDistance);
+  return medianDistance;
+}
+
 /**
  * Performs a revolving scan by rotating the X and Y axes.
  *
@@ -18,33 +72,8 @@
  */
 void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations, int pauseDuration)
 {
-  // Messung und Speicherung der initialen Distanz zu Beginn des Scans
-  // Verbesserte Initialmessung
   int initialDistance = 0;
 
-  if (autoAdjust)
-  {
-    int lowestDistance = measureDistance();
-    int currentDistance;
-
-    for (int i = 0; i < 5; i++)
-    {
-      moveAxisX(150, true);                // Bewegt die Y-Achse um 10 Schritte; Richtung 'true' angenommen
-      currentDistance = measureDistance(); // Führt eine Distanzmessung durch
-
-      if (currentDistance < lowestDistance)
-      {
-        lowestDistance = currentDistance; // Aktualisiert die niedrigste Distanz
-      }
-    }
-
-    // Setzt die Y-Achse zurück zum Ausgangspunkt, bevor der eigentliche Scan beginnt
-    moveAxisX(750, true); // Annahme: Bewegung zurück; Wert muss ggf. angepasst werden
-
-    initialDistance = lowestDistance; // Setzt die niedrigste gemessene Distanz als initiale Distanz
-    Serial.print("initialDistance: ");
-    Serial.println(initialDistance);
-  }
   if (yRotations == 0)
   {
     yRotations = 1;
@@ -57,39 +86,53 @@ void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations,
 
   for (int yRot = 0; yRot < yRotations; yRot++)
   {
+    if (yRot > 0)
+    {
+      // Bewege Y-Achse nach jeder Z-Rotation um die angegebene Gradzahl
+      moveAxisY(ySteps, true, true); // Richtung ist hier ebenfalls als 'true' angenommen; anpassen, falls nötig
+      Serial.println("Rotate Y");
+    }
+
+    if (autoAdjust)
+    {
+      int medianDistance = getMedianDistance(5);
+      if (medianDistance)
+      {
+        initialDistance = medianDistance;
+      }
+      else
+      {
+        autoAdjust = false;
+        Serial.println("No median distance found, cancel AutoAdjust");
+      }
+    }
+
     for (int zRot = 0; zRot < zRotations; zRot++)
     {
       // Bewege X-Achse um angegebene Gradzahl
       Serial.println("Rotate Z");
-      moveAxisX(zSteps, true);        // Richtung ist hier als 'true' angenommen; anpassen, falls nötig
-      delay(pauseDuration);           // relax time
-      sendKeystroke(revoScanTrigger); // Anpassen an deine Implementierung für die Auslösung
-      delay(200);
+      moveAxisX(zSteps, true); // Richtung ist hier als 'true' angenommen; anpassen, falls nötig
 
       // Überprüfe die Distanz und passe an, wenn nötig
       if (autoAdjust)
       {
         long currentDistance = measureDistance();
+
         Serial.print("initialDistance: ");
         Serial.println(initialDistance);
         Serial.print("currentDistance: ");
         Serial.println(currentDistance);
-        Serial.print("difference: ");
-        Serial.println(initialDistance - currentDistance);
 
-        if (abs(currentDistance - initialDistance) > measureDistanceTolerance && abs(currentDistance - initialDistance) <= measureDistanceFailMax)
-        {
-          adjustScannerDistance(initialDistance); // Korrigiert die Distanz zurück zum Initialwert
-        }
+        adjustScannerDistance(initialDistance); // Korrigiert die Distanz zurück zum Initialwert
       }
-    }
 
-    // Bewege Y-Achse nach jeder Z-Rotation um die angegebene Gradzahl
-    moveAxisY(ySteps, true, true); // Richtung ist hier ebenfalls als 'true' angenommen; anpassen, falls nötig
-    Serial.println("Rotate Y");
+      delay(pauseDuration);           // relax time
+      sendKeystroke(revoScanTrigger); // Anpassen an deine Implementierung für die Auslösung
+      delay(scanShotPause);
+    }
   }
 
-  moveAxisY(ySteps * yRotations, false); // Bewege X-Achse wieder zurück zum Nullwert
+  moveAxisY(ySteps * (yRotations - 1), false); // Bewege X-Achse wieder zurück zum Nullwert
 }
 
 #endif

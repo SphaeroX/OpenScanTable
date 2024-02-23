@@ -38,10 +38,8 @@
 
 // Globale Variablen
 int commandState = 0;
-int measureDistanceTolerance = 20; // mm at this distance an adujst will be made
-int measureDistanceFailMax = 50;   // mm at this distance no adjust will be made because wrong focus
-int measureDistanceMinChange = 10; // mm the minimum movement between measrements to be failed
-int adujstDistanceSteps = 2000;
+int measureDistanceTolerance = 5;  // +- mm at this distance an adujst will be made
+int measureDistanceMaxChange = 40; // mm at this distance no adjust will be made because of wrong focus
 int zDegrees = 20;
 int zRotations = 18;
 int yDegrees = 18;
@@ -49,5 +47,10 @@ int yRotations = 3;
 int scanShotPause = 500;
 boolean autoAdjust = false;
 char revoScanTrigger = ' ';
+
+// Konstanten für die Motorsteuerung
+const int stepsPerRevolution = 6400;
+const float mmPerRevolution = 20.0;
+const int stepsPerMillimeter = stepsPerRevolution / mmPerRevolution;
 
 #endif
