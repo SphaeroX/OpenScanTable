@@ -45,6 +45,7 @@ First u have to build the hardware (see [hardware/README.md](./hardware/README.m
 
 - Visual Studio Code installed on your computer.
 - Basic knowledge of using Visual Studio Code and PlatformIO.
+- Drivers: https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers?tab=downloads
 - A MKS TinyBee board or a compatible board.
 
 ### Installation Steps
