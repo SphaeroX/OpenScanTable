@@ -1,4 +1,4 @@
-// web_interface.h
+// WebInterface.h
 #ifndef WEB_INTERFACE_H
 #define WEB_INTERFACE_H
 
@@ -14,18 +14,16 @@ WebServer server(80);
 
 void handleRoot()
 {
-    File file = SPIFFS.open("/index.html", "r"); // Öffnet die Datei index.html im Lesemodus
+    File file = SPIFFS.open("/index.html", "r");
     if (!file)
     {
-        // Wenn die Datei nicht geöffnet werden kann, senden Sie eine Fehlermeldung
         Serial.println("Failed to open file for reading");
         server.send(500, "text/plain", "Error loading index.html");
         return;
     }
 
-    // Verwenden Sie server.streamFile() um die Datei direkt zu senden und als "text/html" zu kennzeichnen
     server.streamFile(file, "text/html");
-    file.close(); // Schließen Sie die Datei nach dem Senden
+    file.close();
 }
 
 void handleStartRevoscan()

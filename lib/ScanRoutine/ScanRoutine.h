@@ -4,32 +4,29 @@
 
 int getMedianDistance(int measurementsPerDirection)
 {
-  const int totalMeasurements = measurementsPerDirection * 2; // Gesamtzahl der Messungen
+  const int totalMeasurements = measurementsPerDirection * 2;
 
-  int distances[totalMeasurements]; // Speichert die Messwerte
+  int distances[totalMeasurements];
 
-  // Führe Messungen mit Bewegung in eine Richtung durch
   for (int i = 0; i < measurementsPerDirection; i++)
   {
-    moveAxisX(150, true);             // Bewegt die Achse; Richtung 'true'
-    distances[i] = measureDistance(); // Speichert den Messwert
+    moveAxisX(150, true);
+    distances[i] = measureDistance();
   }
 
-  // Führe Messungen mit Bewegung in die entgegengesetzte Richtung durch
   for (int i = measurementsPerDirection; i < totalMeasurements; i++)
   {
-    moveAxisX(150, false);            // Bewegt die Achse; Richtung 'false'
-    distances[i] = measureDistance(); // Speichert den Messwert
+    moveAxisX(150, false);
+    distances[i] = measureDistance();
   }
 
-  // Sortiere die Messwerte, um den Median zu bestimmen
+  // Sort for Median
   for (int i = 0; i < totalMeasurements - 1; i++)
   {
     for (int j = 0; j < totalMeasurements - i - 1; j++)
     {
       if (distances[j] > distances[j + 1])
       {
-        // Tausche Elemente
         int temp = distances[j];
         distances[j] = distances[j + 1];
         distances[j + 1] = temp;
@@ -37,20 +34,17 @@ int getMedianDistance(int measurementsPerDirection)
     }
   }
 
-  // Berechne den Median
+  // Calc Median
   int medianDistance;
   if (totalMeasurements % 2 == 0)
   {
-    // Gerade Anzahl von Messungen, nimm den Durchschnitt der zwei mittleren Werte
     medianDistance = (distances[totalMeasurements / 2 - 1] + distances[totalMeasurements / 2]) / 2;
   }
   else
   {
-    // Ungerade Anzahl von Messungen, nimm den mittleren Wert
     medianDistance = distances[totalMeasurements / 2];
   }
 
-  // Verwende medianDistance für weitere Aktionen
   Serial.print("Median Distance: ");
   Serial.println(medianDistance);
   return medianDistance;
@@ -79,7 +73,6 @@ void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations,
     yRotations = 1;
   }
 
-  // Berechnung der Schritte pro Grad
   float stepsPerDegree = 6400.0 / 360.0;
   int ySteps = round(yDegrees * stepsPerDegree);
   int zSteps = round(zDegrees * stepsPerDegree);
@@ -88,8 +81,7 @@ void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations,
   {
     if (yRot > 0)
     {
-      // Bewege Y-Achse nach jeder Z-Rotation um die angegebene Gradzahl
-      moveAxisY(ySteps, true, true); // Richtung ist hier ebenfalls als 'true' angenommen; anpassen, falls nötig
+      moveAxisY(ySteps, true, true);
       Serial.println("Rotate Y");
     }
 
@@ -109,11 +101,9 @@ void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations,
 
     for (int zRot = 0; zRot < zRotations; zRot++)
     {
-      // Bewege X-Achse um angegebene Gradzahl
       Serial.println("Rotate Z");
-      moveAxisX(zSteps, true); // Richtung ist hier als 'true' angenommen; anpassen, falls nötig
+      moveAxisX(zSteps, true);
 
-      // Überprüfe die Distanz und passe an, wenn nötig
       if (autoAdjust)
       {
         long currentDistance = measureDistance();
@@ -123,16 +113,16 @@ void performRevoScan(int zDegrees, int zRotations, int yDegrees, int yRotations,
         Serial.print("currentDistance: ");
         Serial.println(currentDistance);
 
-        adjustScannerDistance(initialDistance); // Korrigiert die Distanz zurück zum Initialwert
+        adjustScannerDistance(initialDistance);
       }
 
-      delay(pauseDuration);           // relax time
-      sendKeystroke(revoScanTrigger); // Anpassen an deine Implementierung für die Auslösung
+      delay(pauseDuration); // relax time
+      sendKeystroke(revoScanTrigger);
       delay(scanShotPause);
     }
   }
 
-  moveAxisY(ySteps * (yRotations - 1), false); // Bewege X-Achse wieder zurück zum Nullwert
+  moveAxisY(ySteps * (yRotations - 1), false);
 }
 
 #endif

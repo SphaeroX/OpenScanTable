@@ -1,4 +1,4 @@
-// bluetooth_control.h
+// BluetoothControl.h
 #ifndef BLUETOOTH_CONTROL_H
 #define BLUETOOTH_CONTROL_H
 

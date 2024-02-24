@@ -1,4 +1,4 @@
-// motor_control.h
+// MotorControl.h
 #ifndef MOTOR_CONTROL_H
 #define MOTOR_CONTROL_H
 
@@ -57,21 +57,38 @@ void moveAxisZ(int steps, bool direction, boolean hold = false, int customDelay 
     }
 }
 
-// Anpassungsfunktion für den Scanner
+void textAxes()
+{
+    moveAxisX(3000, true);
+    delay(1000);
+    Serial.println("Testing Y (CW/CCW)");
+    moveAxisY(1000, true, true);
+    moveAxisY(1000, false, true);
+    moveAxisY(1000, true, true);
+    moveAxisY(1000, false, true);
+    moveAxisY(1000, true, true);
+    moveAxisY(1000, false);
+    delay(1000);
+    Serial.println("Testing Z (DOWN/UP)");
+    moveAxisZ(1600, true);
+    moveAxisZ(1600, false);
+    moveAxisZ(1600, true);
+    moveAxisZ(1600, false);
+    moveAxisZ(1600, true);
+    moveAxisZ(1600, false);
+    delay(1000);
+    Serial.println("DONE");
+}
+
 void adjustScannerDistance(int targetDistance)
 {
     int currentDistance = measureDistance();
     int distanceDifference = targetDistance - currentDistance;
     int absDistanceDifference = abs(targetDistance - currentDistance);
 
-    // Prüfe, ob Anpassung notwendig ist
     if (abs(distanceDifference) > measureDistanceTolerance)
     {
-        // Berechne die Anzahl der notwendigen Schritte
         bool direction = distanceDifference < 0;
-        // true ist näher
-        // bsp möchte 200 habe 100 = 100
-        // ist gleich true
         int stepsNeeded = absDistanceDifference * stepsPerMillimeter;
 
         Serial.print("stepsNeeded: ");
