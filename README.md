@@ -39,6 +39,8 @@ For a complete list of parts and specifications, please refer to the [hardware/B
 
 Follow these steps to install and set up your OpenScanStable system. This guide assumes you have a basic understanding of electronics and are familiar with Visual Studio Code and PlatformIO.
 
+First u have to build the hardware (see [hardware/README.md](./hardware/README.md) for more information).
+
 ### Pre-requisites
 
 - Visual Studio Code installed on your computer.
